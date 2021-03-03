@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../../store/actions/user";
 import { clearLoginFormErrors } from "../../store/actions/formErrors/loginFormErrors";
 
-const UserLoginScreen = () => {
+const UserLoginScreen = (props) => {
   const dispatch = useDispatch();
 
   const loginLoader = useSelector((state) => state.userLoader.loginLoader);
@@ -67,6 +67,7 @@ const UserLoginScreen = () => {
                   keyboardType="number-pad"
                   placeholder="Phone Number (e.g 17085552020)"
                   placeholderTextColor="#9E9E9E"
+                  returnKeyType="next"
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -112,7 +113,12 @@ const UserLoginScreen = () => {
                 <Text style={styles.registerTextQuestion}>
                   New to Chicago Boost?
                 </Text>
-                <Text style={styles.registerButton}>Register!</Text>
+                <Text
+                  style={styles.registerButton}
+                  onPress={() => props.navigation.navigate("Register")}
+                >
+                  Register!
+                </Text>
               </View>
             </View>
           </View>
@@ -152,14 +158,14 @@ const styles = StyleSheet.create({
   title: {
     width: "100%",
     fontFamily: "poppins-semibold",
-    fontSize: 28,
+    fontSize: 26,
     textAlign: "left",
   },
   subtitle: {
     width: "100%",
     marginTop: 5,
     fontFamily: "poppins-regular",
-    fontSize: 18,
+    fontSize: 16,
     textAlign: "left",
   },
   formContainer: {

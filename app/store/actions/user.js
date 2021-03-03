@@ -10,10 +10,17 @@ import { SET_IS_AUTHENTICATED, SET_IS_NOT_AUTHENTICATED } from "./auth";
 import {
   USER_IS_LOGGING_IN,
   USER_IS_NOT_LOGGING_IN,
+  USER_IS_REGISTERING,
+  USER_IS_NOT_REGISTERING,
 } from "./loaders/userLoader";
 
 // Errors
 import { LOGIN_ERRORS, NO_LOGIN_ERRORS } from "./formErrors/loginFormErrors";
+import {
+  SET_REGISTER_FORM_ERRORS,
+  REMOVE_REGISTER_FORM_ERRORS,
+} from "./formErrors/registerFormErrors";
+import { Alert } from "react-native";
 
 export const USER_LOGIN = "USER_LOGIN";
 export const USER_REGISTER = "USER_REGISTER";
@@ -46,8 +53,8 @@ export const userLogin = (phoneNumber, password) => {
           return;
         }
 
-        storeUserData(user.token);
         dispatch({ type: USER_LOGIN, user: user });
+        storeUserData(user.token);
         dispatch({ type: SET_IS_AUTHENTICATED });
         dispatch({ type: NO_LOGIN_ERRORS });
         dispatch({ type: USER_IS_NOT_LOGGING_IN });
@@ -82,6 +89,88 @@ export const autoUserLogin = (jwt) => {
       .catch((err) => {
         console.log(err);
         dispatch({ type: SET_IS_NOT_AUTHENTICATED });
+      });
+  };
+};
+
+export const userRegister = (
+  firstName,
+  lastName,
+  email,
+  phoneNumber,
+  password
+) => {
+  return (dispatch) => {
+    const userRegisterData = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email.toLowerCase(),
+      phoneNumber: phoneNumber,
+      password: password,
+      admin: false,
+    };
+
+    const reqObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+      body: JSON.stringify(userRegisterData),
+    };
+
+    dispatch({ type: USER_IS_REGISTERING });
+    fetch(`${API_BASE_URL}/users/register`, reqObj)
+      .then((resp) => resp.json())
+      .then((user) => {
+        if (user.message) {
+          const formErrors = [];
+          formErrors.push(user);
+          dispatch({ type: SET_REGISTER_FORM_ERRORS, formErrors: formErrors });
+          dispatch({ type: SET_IS_NOT_AUTHENTICATED });
+          dispatch({ type: USER_IS_NOT_REGISTERING });
+          return;
+        }
+
+        if (user.validationErrors) {
+          const firstFormErrors = user.validationErrors.map((error) => error);
+          if (firstFormErrors.some((error) => error.field === "password")) {
+            const formErrors = firstFormErrors.filter(
+              (error) => error.field !== "password"
+            );
+            formErrors.push({
+              field: "password",
+              message:
+                "Password should at least be 6 characters long, contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.",
+            });
+
+            dispatch({
+              type: SET_REGISTER_FORM_ERRORS,
+              formErrors: formErrors,
+            });
+            dispatch({ type: SET_IS_NOT_AUTHENTICATED });
+            dispatch({ type: USER_IS_NOT_REGISTERING });
+            return;
+          }
+
+          dispatch({
+            type: SET_REGISTER_FORM_ERRORS,
+            formErrors: firstFormErrors,
+          });
+          dispatch({ type: SET_IS_NOT_AUTHENTICATED });
+          dispatch({ type: USER_IS_NOT_REGISTERING });
+          return;
+        }
+
+        dispatch({ type: REMOVE_REGISTER_FORM_ERRORS });
+        dispatch({ type: USER_REGISTER, user: user });
+        storeUserData(user.token);
+        dispatch({ type: SET_IS_AUTHENTICATED });
+        dispatch({ type: USER_IS_NOT_REGISTERING });
+      })
+      .catch((err) => {
+        dispatch({ type: SET_IS_NOT_AUTHENTICATED });
+        dispatch({ type: USER_IS_NOT_REGISTERING });
       });
   };
 };

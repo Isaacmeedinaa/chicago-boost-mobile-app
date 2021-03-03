@@ -5,7 +5,6 @@ import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import fonts from "./constants/fonts";
 import AppNavigator from "./navigation/AppNavigator";
-
 import { useDispatch, useSelector } from "react-redux";
 import { autoUserLogin } from "./store/actions/user";
 import { setIsNotAuthenticated } from "./store/actions/auth";
@@ -15,7 +14,6 @@ const App = () => {
   const dispatch = useDispatch();
 
   const auth = useSelector((state) => state.auth);
-  const reduxStore = useSelector((state) => state);
 
   useEffect(() => {
     const getJWT = async () => {
@@ -30,7 +28,6 @@ const App = () => {
         console.log(err);
       }
     };
-
     getJWT();
   }, [dispatch]);
 

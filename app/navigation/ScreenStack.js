@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 // Auth Screens
 import UserLoginScreen from "../screens/auth/UserLoginScreen";
+import UserRegisterScreen from "../screens/auth/UserRegisterScreen";
 
 // Home Screens
 import HomeScreen from "../screens/home/HomeScreen";
@@ -20,6 +21,7 @@ export const AuthScreens = () => {
       screenOptions={authStackOptions}
     >
       <AuthStack.Screen name="Login" component={UserLoginScreen} />
+      <AuthStack.Screen name="Register" component={UserRegisterScreen} />
     </AuthStack.Navigator>
   );
 };

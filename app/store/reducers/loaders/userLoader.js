@@ -1,6 +1,8 @@
 import {
   USER_IS_LOGGING_IN,
   USER_IS_NOT_LOGGING_IN,
+  USER_IS_REGISTERING,
+  USER_IS_NOT_REGISTERING,
 } from "../../actions/loaders/userLoader";
 
 const initialState = {
@@ -20,6 +22,18 @@ const userLoader = (state = initialState, action) => {
       return {
         ...state,
         loginLoader: false,
+      };
+
+    case USER_IS_REGISTERING:
+      return {
+        ...state,
+        registerLoader: true,
+      };
+
+    case USER_IS_NOT_REGISTERING:
+      return {
+        ...state,
+        registerLoader: false,
       };
 
     default:

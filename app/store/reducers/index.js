@@ -9,6 +9,7 @@ import userLoader from "./loaders/userLoader";
 
 // Form Errors
 import loginFormErrors from "./formErrors/loginFormErrors";
+import registerFormErrors from "./formErrors/registerFormErrors";
 
 const rootReducer = combineReducers({
   // General
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   userLoader,
   // Form Errors
   loginFormErrors,
+  registerFormErrors,
 });
 
 export default rootReducer;
