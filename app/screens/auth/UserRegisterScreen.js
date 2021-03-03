@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   registerScrollView: {
+    minHeight: "100%",
     justifyContent: "center",
     alignContent: "center",
     paddingTop: 50,

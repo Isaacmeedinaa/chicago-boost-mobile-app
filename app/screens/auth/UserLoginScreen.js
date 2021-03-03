@@ -105,7 +105,10 @@ const UserLoginScreen = (props) => {
             </View>
             <View style={styles.bottomTextsContainer}>
               <View style={styles.forgotPasswordTextContainer}>
-                <Text style={styles.forgotPasswordButton}>
+                <Text
+                  style={styles.forgotPasswordButton}
+                  onPress={() => props.navigation.navigate("ForgotPassword")}
+                >
                   Forgot your password?
                 </Text>
               </View>
@@ -137,10 +140,11 @@ const styles = StyleSheet.create({
   },
   loginScrollView: {
     flex: 1,
+    // minHeight: "100%",
     justifyContent: "center",
     alignContent: "center",
-    paddingTop: 50,
-    paddingBottom: 50,
+    // paddingTop: 50,
+    // paddingBottom: 50,
   },
   screen: {
     flex: 1,

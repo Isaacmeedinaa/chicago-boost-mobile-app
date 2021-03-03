@@ -3,11 +3,14 @@ import {
   USER_IS_NOT_LOGGING_IN,
   USER_IS_REGISTERING,
   USER_IS_NOT_REGISTERING,
+  USER_IS_REQUESTING_RECOVERY_CODE,
+  USER_IS_NOT_REQUESTING_RECOVERY_CODE,
 } from "../../actions/loaders/userLoader";
 
 const initialState = {
   loginLoader: false,
   registerLoader: false,
+  forgotPasswordLoader: false,
 };
 
 const userLoader = (state = initialState, action) => {
@@ -34,6 +37,18 @@ const userLoader = (state = initialState, action) => {
       return {
         ...state,
         registerLoader: false,
+      };
+
+    case USER_IS_REQUESTING_RECOVERY_CODE:
+      return {
+        ...state,
+        forgotPasswordLoader: true,
+      };
+
+    case USER_IS_NOT_REQUESTING_RECOVERY_CODE:
+      return {
+        ...state,
+        forgotPasswordLoader: false,
       };
 
     default:

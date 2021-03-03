@@ -12,6 +12,8 @@ import {
   USER_IS_NOT_LOGGING_IN,
   USER_IS_REGISTERING,
   USER_IS_NOT_REGISTERING,
+  USER_IS_REQUESTING_RECOVERY_CODE,
+  USER_IS_NOT_REQUESTING_RECOVERY_CODE,
 } from "./loaders/userLoader";
 
 // Errors
@@ -20,7 +22,10 @@ import {
   SET_REGISTER_FORM_ERRORS,
   REMOVE_REGISTER_FORM_ERRORS,
 } from "./formErrors/registerFormErrors";
-import { Alert } from "react-native";
+import {
+  SET_FORGOT_PASSWORD_ERRORS,
+  REMOVE_FORGOT_PASSWORD_ERRORS,
+} from "./formErrors/forgotPasswordFormErrors";
 
 export const USER_LOGIN = "USER_LOGIN";
 export const USER_REGISTER = "USER_REGISTER";
@@ -171,6 +176,42 @@ export const userRegister = (
       .catch((err) => {
         dispatch({ type: SET_IS_NOT_AUTHENTICATED });
         dispatch({ type: USER_IS_NOT_REGISTERING });
+      });
+  };
+};
+
+export const userForgotPassword = (phoneNumber, navigation) => {
+  return (dispatch) => {
+    const userForgotPasswordData = {
+      phoneNumber: phoneNumber,
+    };
+
+    const reqObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+      body: JSON.stringify(userForgotPasswordData),
+    };
+
+    dispatch({ type: USER_IS_REQUESTING_RECOVERY_CODE });
+    fetch(`${API_BASE_URL}/users/recovery-code`, reqObj)
+      .then((resp) => resp.json())
+      .then((recoveryCode) => {
+        if (recoveryCode.message) {
+          dispatch({ type: SET_FORGOT_PASSWORD_ERRORS });
+          dispatch({ type: USER_IS_NOT_REQUESTING_RECOVERY_CODE });
+          return;
+        }
+
+        dispatch({ type: REMOVE_FORGOT_PASSWORD_ERRORS });
+        dispatch({ type: USER_IS_NOT_REQUESTING_RECOVERY_CODE });
+        navigation.navigate("Login", { phoneNumber: phoneNumber });
+      })
+      .catch((err) => {
+        dispatch({ type: REMOVE_FORGOT_PASSWORD_ERRORS });
+        dispatch({ type: USER_IS_NOT_REQUESTING_RECOVERY_CODE });
       });
   };
 };
