@@ -14,6 +14,8 @@ import {
   USER_IS_NOT_REGISTERING,
   USER_IS_REQUESTING_RECOVERY_CODE,
   USER_IS_NOT_REQUESTING_RECOVERY_CODE,
+  USER_IS_CHANGING_PASSWORD,
+  USER_IS_NOT_CHANGING_PASSWORD,
 } from "./loaders/userLoader";
 
 // Errors
@@ -26,6 +28,10 @@ import {
   SET_FORGOT_PASSWORD_ERRORS,
   REMOVE_FORGOT_PASSWORD_ERRORS,
 } from "./formErrors/forgotPasswordFormErrors";
+import {
+  SET_CHANGE_PASSWORD_ERRORS,
+  REMOVE_CHANGE_PASSWORD_ERRORS,
+} from "./formErrors/changePasswordFormErrors";
 
 export const USER_LOGIN = "USER_LOGIN";
 export const USER_REGISTER = "USER_REGISTER";
@@ -207,11 +213,90 @@ export const userForgotPassword = (phoneNumber, navigation) => {
 
         dispatch({ type: REMOVE_FORGOT_PASSWORD_ERRORS });
         dispatch({ type: USER_IS_NOT_REQUESTING_RECOVERY_CODE });
-        navigation.navigate("Login", { phoneNumber: phoneNumber });
+        navigation.navigate("ChangePassword");
       })
       .catch((err) => {
         dispatch({ type: REMOVE_FORGOT_PASSWORD_ERRORS });
         dispatch({ type: USER_IS_NOT_REQUESTING_RECOVERY_CODE });
+      });
+  };
+};
+
+export const userChangePassword = (
+  recoveryCode,
+  password,
+  confirmPassword,
+  userId
+) => {
+  return (dispatch) => {
+    const userChangePasswordData = {
+      recoveryCode: recoveryCode,
+      newPassword: password,
+    };
+
+    const reqObj = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+      body: JSON.stringify(userChangePasswordData),
+    };
+
+    dispatch({ type: USER_IS_CHANGING_PASSWORD });
+
+    if (password !== confirmPassword) {
+      const formErrors = [];
+      formErrors.push({
+        field: "confirmPassword",
+        message: "Passwords do not match!",
+      });
+      dispatch({ type: SET_CHANGE_PASSWORD_ERRORS, formErrors: formErrors });
+      dispatch({ type: USER_IS_NOT_CHANGING_PASSWORD });
+      return;
+    }
+
+    fetch(`${API_BASE_URL}/users/update-password/${userId}`, reqObj)
+      .then((resp) => resp.json())
+      .then((user) => {
+        if (user.message) {
+          const formErrors = [];
+          formErrors.push(user);
+          dispatch({
+            type: SET_CHANGE_PASSWORD_ERRORS,
+            formErrors: formErrors,
+          });
+          dispatch({ type: USER_IS_NOT_CHANGING_PASSWORD });
+          return;
+        }
+
+        if (user.validationErrors) {
+          const passwordValidationError = user.validationErrors.some(
+            (error) => error.field === "password"
+          );
+          if (passwordValidationError) {
+            const formErrors = [];
+            formErrors.push({
+              field: "password",
+              message:
+                "Password should at least be 6 characters long, contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.",
+            });
+            dispatch({
+              type: SET_CHANGE_PASSWORD_ERRORS,
+              formErrors: formErrors,
+            });
+            dispatch({ type: USER_IS_NOT_CHANGING_PASSWORD });
+            return;
+          }
+        }
+
+        dispatch({ type: REMOVE_CHANGE_PASSWORD_ERRORS });
+        dispatch(userLogin(user.phoneNumber, password));
+        dispatch({ type: USER_IS_NOT_CHANGING_PASSWORD });
+      })
+      .catch((err) => {
+        dispatch({ type: USER_IS_NOT_CHANGING_PASSWORD });
+        console.log(err);
       });
   };
 };

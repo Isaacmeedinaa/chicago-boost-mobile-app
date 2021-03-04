@@ -4,4 +4,7 @@ export const formFields = {
   registerEmail: "email",
   registerPhoneNumber: "phoneNumber",
   registerPassword: "password",
+  changePasswordRecoveryCode: "recoveryCode",
+  changePasswordPassword: "password",
+  changePasswordConfirmPassword: "confirmPassword",
 };
