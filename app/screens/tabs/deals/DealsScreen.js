@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Text, Button, Alert } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogout } from "../../store/actions/user";
 
-const HomeScreen = () => {
+const DealsScreen = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
@@ -40,18 +39,18 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.screen}>
-      <Text>HomeScreen.js</Text>
-      <Button title="Log Out" onPress={() => dispatch(userLogout())} />
+      <Text>DealsScreen.js</Text>
     </View>
   );
 };
 
-export default HomeScreen;
+export default DealsScreen;
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f8f8f8",
   },
 });
