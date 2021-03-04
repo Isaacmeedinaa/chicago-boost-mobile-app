@@ -1,5 +1,6 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 import { useSelector } from "react-redux";
 
@@ -11,6 +12,7 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
+      <StatusBar style="dark" />
       {!auth.isAuthenticated ? <AuthScreens /> : <Tabs />}
     </NavigationContainer>
   );
