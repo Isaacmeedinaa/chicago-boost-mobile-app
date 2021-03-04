@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Alert } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { useDispatch, useSelector } from "react-redux";
+import { userUpdatePushToken } from "../../../store/actions/user";
 
 const DealsScreen = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const DealsScreen = () => {
         let token = await Notifications.getExpoPushTokenAsync();
 
         if (!user.pushToken || user.pushToken !== token.data) {
-          console.log("update user!");
+          dispatch(userUpdatePushToken(token.data));
         }
       } catch (err) {
         console.log(err);

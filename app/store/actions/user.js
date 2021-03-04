@@ -35,6 +35,7 @@ import {
 
 export const USER_LOGIN = "USER_LOGIN";
 export const USER_REGISTER = "USER_REGISTER";
+export const USER_UPDATE = "USER_UPDATE";
 export const USER_LOGOUT = "USER_LOGOUT";
 
 export const userLogin = (phoneNumber, password) => {
@@ -64,7 +65,7 @@ export const userLogin = (phoneNumber, password) => {
           return;
         }
 
-        dispatch({ type: USER_LOGIN, user: user });
+        dispatch({ type: USER_LOGIN, user: user.user });
         storeUserData(user.token);
         dispatch({ type: SET_IS_AUTHENTICATED });
         dispatch({ type: NO_LOGIN_ERRORS });
@@ -174,7 +175,7 @@ export const userRegister = (
         }
 
         dispatch({ type: REMOVE_REGISTER_FORM_ERRORS });
-        dispatch({ type: USER_REGISTER, user: user });
+        dispatch({ type: USER_REGISTER, user: user.user });
         storeUserData(user.token);
         dispatch({ type: SET_IS_AUTHENTICATED });
         dispatch({ type: USER_IS_NOT_REGISTERING });
@@ -296,6 +297,57 @@ export const userChangePassword = (
       })
       .catch((err) => {
         dispatch({ type: USER_IS_NOT_CHANGING_PASSWORD });
+        console.log(err);
+      });
+  };
+};
+
+export const userUpdatePushToken = (pushToken) => {
+  return async (dispatch, getState) => {
+    let jwt;
+    try {
+      const asyncStorageJwt = await AsyncStorage.getItem("@jwt");
+      if (asyncStorageJwt) {
+        jwt = asyncStorageJwt;
+      }
+    } catch (err) {
+      return console.log(err);
+    }
+
+    const user = getState().user;
+
+    const updateUserPushTokenData = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      pushToken: pushToken,
+      admin: user.admin,
+    };
+
+    const reqObj = {
+      method: "PUT",
+      headers: {
+        "x-auth-token": jwt,
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+      body: JSON.stringify(updateUserPushTokenData),
+    };
+
+    fetch(`${API_BASE_URL}/users/${user._id}`, reqObj)
+      .then((resp) => resp.json())
+      .then((user) => {
+        if (user.message) {
+          return;
+        }
+        if (user.validationErrors) {
+          return;
+        }
+
+        dispatch({ type: USER_UPDATE, user: user });
+      })
+      .catch((err) => {
         console.log(err);
       });
   };
