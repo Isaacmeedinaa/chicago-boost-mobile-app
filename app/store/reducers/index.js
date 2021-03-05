@@ -4,10 +4,12 @@ import { combineReducers } from "redux";
 import auth from "./auth";
 import user from "./user";
 import deals from "./deals";
+import locations from "./locations";
 
 // Loaders
 import userLoader from "./loaders/userLoader";
 import dealsLoader from "./loaders/dealsLoader";
+import locationsLoader from "./loaders/locationsLoader";
 
 // Form Errors
 import loginFormErrors from "./formErrors/loginFormErrors";
@@ -20,9 +22,11 @@ const rootReducer = combineReducers({
   auth,
   user,
   deals,
+  locations,
   // Loaders
   userLoader,
   dealsLoader,
+  locationsLoader,
   // Form Errors
   loginFormErrors,
   registerFormErrors,
