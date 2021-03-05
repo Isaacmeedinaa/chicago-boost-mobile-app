@@ -1,14 +1,27 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Text, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  ActivityIndicator,
+  SafeAreaView,
+  FlatList,
+  RefreshControl,
+} from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { useDispatch, useSelector } from "react-redux";
 import { userUpdatePushToken } from "../../../store/actions/user";
+import { getDeals } from "../../../store/actions/deals";
+
+import Deal from "./UI/Deal";
 
 const DealsScreen = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
+  const dealsLoader = useSelector((state) => state.dealsLoader.dealsLoader);
+  const deals = useSelector((state) => state.deals);
 
   useEffect(() => {
     const askForNotificationsPermission = async () => {
@@ -36,22 +49,64 @@ const DealsScreen = () => {
     setTimeout(() => {
       askForNotificationsPermission();
     }, 1000);
-  });
+
+    dispatch(getDeals());
+  }, [dispatch]);
+
+  if (dealsLoader) {
+    return (
+      <View style={styles.screen}>
+        <ActivityIndicator size={24} color="#F2811D" />
+      </View>
+    );
+  }
+
+  const deal = ({ item }) => <Deal deal={item} />;
+
+  const onDealsRefresh = () => {
+    dispatch(getDeals());
+  };
 
   return (
-    <View style={styles.screen}>
-      <Text>DealsScreen.js</Text>
-    </View>
+    <SafeAreaView style={styles.dealsSafeArea}>
+      <View style={styles.screen}>
+        <FlatList
+          style={styles.dealsFlatList}
+          contentContainerStyle={styles.dealsFlatListContainer}
+          data={deals}
+          renderItem={deal}
+          keyExtractor={(item) => item._id}
+          refreshControl={
+            <RefreshControl
+              refreshing={dealsLoader}
+              onRefresh={onDealsRefresh}
+              tintColor="#F2811D"
+            />
+          }
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default DealsScreen;
 
 const styles = StyleSheet.create({
+  dealsSafeArea: {
+    flex: 1,
+  },
   screen: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#f7f7f7",
+  },
+  dealsFlatList: {
+    width: "100%",
+  },
+  dealsFlatListContainer: {
+    paddingBottom: 20,
+    flexGrow: 1,
+    alignItems: "center",
   },
 });
