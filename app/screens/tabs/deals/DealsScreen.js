@@ -12,7 +12,7 @@ import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { useDispatch, useSelector } from "react-redux";
 import { userUpdatePushToken } from "../../../store/actions/user";
-import { getDeals } from "../../../store/actions/deals";
+import { getDeals, getRefreshedDeals } from "../../../store/actions/deals";
 
 import Deal from "./UI/Deal";
 
@@ -21,6 +21,9 @@ const DealsScreen = () => {
 
   const user = useSelector((state) => state.user);
   const dealsLoader = useSelector((state) => state.dealsLoader.dealsLoader);
+  const dealsRefreshLoader = useSelector(
+    (state) => state.dealsLoader.dealsRefreshLoader
+  );
   const deals = useSelector((state) => state.deals);
 
   useEffect(() => {
@@ -64,7 +67,7 @@ const DealsScreen = () => {
   const deal = ({ item }) => <Deal deal={item} />;
 
   const onDealsRefresh = () => {
-    dispatch(getDeals());
+    dispatch(getRefreshedDeals());
   };
 
   return (
@@ -78,7 +81,7 @@ const DealsScreen = () => {
           keyExtractor={(item) => item._id}
           refreshControl={
             <RefreshControl
-              refreshing={dealsLoader}
+              refreshing={dealsRefreshLoader}
               onRefresh={onDealsRefresh}
               tintColor="#F2811D"
             />

@@ -1,10 +1,13 @@
 import {
   DEALS_ARE_LOADING,
   DEALS_ARE_NOT_LOADING,
+  DEALS_ARE_REFRESHING,
+  DEALS_ARE_NOT_REFRESHING,
 } from "../../actions/loaders/dealsLoader";
 
 const initialState = {
   dealsLoader: false,
+  dealsRefreshLoader: false,
 };
 
 const dealsLoader = (state = initialState, action) => {
@@ -19,6 +22,18 @@ const dealsLoader = (state = initialState, action) => {
       return {
         ...state,
         dealsLoader: false,
+      };
+
+    case DEALS_ARE_REFRESHING:
+      return {
+        ...state,
+        dealsRefreshLoader: true,
+      };
+
+    case DEALS_ARE_NOT_REFRESHING:
+      return {
+        ...state,
+        dealsRefreshLoader: false,
       };
 
     default:
