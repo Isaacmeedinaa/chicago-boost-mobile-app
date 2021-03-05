@@ -42,7 +42,7 @@ export const getLocations = () => {
         dispatch({ type: SET_LOCATIONS, locations: locations });
         dispatch({ type: LOCATIONS_ARE_NOT_LOADING });
       })
-      .catch((locations) => {
+      .catch((err) => {
         dispatch({ type: LOCATIONS_ARE_NOT_LOADING });
       });
   };
@@ -70,7 +70,7 @@ export const getRefreshedLocations = () => {
     };
 
     dispatch({ type: LOCATIONS_ARE_REFRESHING });
-    fetch(`${API_BASE_URL}/deals`, reqObj)
+    fetch(`${API_BASE_URL}/locations`, reqObj)
       .then((resp) => resp.json())
       .then((locations) => {
         dispatch({ type: SET_LOCATIONS, locations: locations });
