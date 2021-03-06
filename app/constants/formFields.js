@@ -7,4 +7,8 @@ export const formFields = {
   changePasswordRecoveryCode: "recoveryCode",
   changePasswordPassword: "password",
   changePasswordConfirmPassword: "confirmPassword",
+  updatePersonalInfoFirstName: "firstName",
+  updatePersonalInfoLastName: "lastName",
+  updatePersonalInfoEmailName: "email",
+  updatePersonalInfoPhoneNumber: "phoneNumber",
 };
