@@ -16,6 +16,7 @@ import loginFormErrors from "./formErrors/loginFormErrors";
 import registerFormErrors from "./formErrors/registerFormErrors";
 import forgotPasswordFormErrors from "./formErrors/forgotPasswordFormErrors";
 import changePasswordFormErrors from "./formErrors/changePasswordFormErrors";
+import updatePersonalInfoFormErrors from "./formErrors/updatePersonalInfoFormErrors";
 
 const rootReducer = combineReducers({
   // General
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   registerFormErrors,
   forgotPasswordFormErrors,
   changePasswordFormErrors,
+  updatePersonalInfoFormErrors,
 });
 
 export default rootReducer;

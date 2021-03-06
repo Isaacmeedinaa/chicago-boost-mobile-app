@@ -16,6 +16,8 @@ import {
   USER_IS_NOT_REQUESTING_RECOVERY_CODE,
   USER_IS_CHANGING_PASSWORD,
   USER_IS_NOT_CHANGING_PASSWORD,
+  USER_IS_UPDATING,
+  USER_IS_NOT_UPDATING,
 } from "./loaders/userLoader";
 
 // Errors
@@ -32,6 +34,10 @@ import {
   SET_CHANGE_PASSWORD_ERRORS,
   REMOVE_CHANGE_PASSWORD_ERRORS,
 } from "./formErrors/changePasswordFormErrors";
+import {
+  SET_UPDATE_PERSONAL_INFO_ERRORS,
+  REMOVE_UPDATE_PERSONAL_INFO_ERRORS,
+} from "./formErrors/updatePersonalInfoFormErrors";
 
 export const USER_LOGIN = "USER_LOGIN";
 export const USER_REGISTER = "USER_REGISTER";
@@ -349,6 +355,80 @@ export const userUpdatePushToken = (pushToken) => {
       })
       .catch((err) => {
         console.log(err);
+      });
+  };
+};
+
+export const userUpdatePersonalInfo = (
+  firstName,
+  lastName,
+  email,
+  phoneNumber,
+  userId
+) => {
+  return async (dispatch, getState) => {
+    let jwt;
+    try {
+      const asyncStorageJwt = await AsyncStorage.getItem("@jwt");
+      if (asyncStorageJwt) {
+        jwt = asyncStorageJwt;
+      }
+    } catch (err) {
+      return console.log(err);
+    }
+
+    const user = getState().user;
+
+    const userUpdatePersonalInfoData = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email.toLowerCase(),
+      phoneNumber: phoneNumber,
+      admin: user.admin,
+    };
+
+    const reqObj = {
+      method: "PUT",
+      headers: {
+        "x-auth-token": jwt,
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+      body: JSON.stringify(userUpdatePersonalInfoData),
+    };
+
+    dispatch({ type: USER_IS_UPDATING });
+    fetch(`${API_BASE_URL}/users/${userId}`, reqObj)
+      .then((resp) => resp.json())
+      .then((user) => {
+        if (user.message) {
+          const formErrors = [];
+          formErrors.push(user);
+          dispatch({
+            type: SET_UPDATE_PERSONAL_INFO_ERRORS,
+            formErrors: formErrors,
+          });
+          dispatch({ type: USER_IS_NOT_UPDATING });
+          return;
+        }
+
+        if (user.validationErrors) {
+          dispatch({
+            type: SET_UPDATE_PERSONAL_INFO_ERRORS,
+            formErrors: user.validationErrors,
+          });
+          dispatch({ type: USER_IS_NOT_UPDATING });
+          return;
+        }
+
+        dispatch({ type: REMOVE_UPDATE_PERSONAL_INFO_ERRORS });
+        dispatch({ type: USER_UPDATE, user: user });
+        dispatch({ type: USER_IS_NOT_UPDATING });
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({ type: REMOVE_UPDATE_PERSONAL_INFO_ERRORS });
+        dispatch({ type: USER_IS_NOT_UPDATING });
       });
   };
 };

@@ -7,6 +7,8 @@ import {
   USER_IS_NOT_REQUESTING_RECOVERY_CODE,
   USER_IS_CHANGING_PASSWORD,
   USER_IS_NOT_CHANGING_PASSWORD,
+  USER_IS_UPDATING,
+  USER_IS_NOT_UPDATING,
 } from "../../actions/loaders/userLoader";
 
 const initialState = {
@@ -14,6 +16,7 @@ const initialState = {
   registerLoader: false,
   forgotPasswordLoader: false,
   changePasswordLoader: false,
+  updatingLoader: false,
 };
 
 const userLoader = (state = initialState, action) => {
@@ -64,6 +67,18 @@ const userLoader = (state = initialState, action) => {
       return {
         ...state,
         changePasswordLoader: false,
+      };
+
+    case USER_IS_UPDATING:
+      return {
+        ...state,
+        updatingLoader: true,
+      };
+
+    case USER_IS_NOT_UPDATING:
+      return {
+        ...state,
+        updatingLoader: false,
       };
 
     default:

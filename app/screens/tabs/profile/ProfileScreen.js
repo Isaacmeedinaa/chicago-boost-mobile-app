@@ -1,26 +1,408 @@
-import React from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
-import { useDispatch } from "react-redux";
-import { userLogout } from "../../../store/actions/user";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  ActivityIndicator,
+  TextInput,
+  Dimensions,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  userUpdatePersonalInfo,
+  userLogout,
+} from "../../../store/actions/user";
+import { formFields } from "../../../constants/formFields";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
 
+  const user = useSelector((state) => state.user);
+  const userUpdatingLoader = useSelector(
+    (state) => state.userLoader.updatingLoader
+  );
+  const updatePersonalInfoFormErrors = useSelector(
+    (state) => state.updatePersonalInfoFormErrors
+  );
+
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [email, setEmail] = useState(user.email);
+  const [emailError, setEmailError] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
+  const [phoneNumberError, setPhoneNumberError] = useState(null);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    const emailError = updatePersonalInfoFormErrors.find(
+      (formError) => formError.field === formFields.updatePersonalInfoEmailName
+    );
+    if (emailError) {
+      setEmailError(emailError);
+    } else {
+      setEmailError(emailError);
+    }
+
+    const phoneNumberError = updatePersonalInfoFormErrors.find(
+      (formError) =>
+        formError.field === formFields.updatePersonalInfoPhoneNumber
+    );
+    if (phoneNumberError) {
+      setPhoneNumberError(phoneNumberError);
+    } else {
+      setPhoneNumberError(phoneNumberError);
+    }
+  }, [updatePersonalInfoFormErrors]);
+
+  const onUpdatePersonalInfoPress = () => {
+    dispatch(
+      userUpdatePersonalInfo(firstName, lastName, email, phoneNumber, user._id)
+    );
+  };
+
   return (
-    <View style={styles.screen}>
-      <Text>ProfileScreen.js</Text>
-      <Button title="Log Out" onPress={() => dispatch(userLogout())} />
-    </View>
+    <SafeAreaView style={styles.profileSafeArea}>
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="handled"
+        listViewDisplayed={false}
+        contentContainerStyle={styles.profileScrollView}
+      >
+        <View style={styles.screen}>
+          <View style={styles.personalInfoContainer}>
+            <View style={styles.personalInfoFormContainer}>
+              <Text style={styles.personalInfoHeader}>
+                Personal Information
+              </Text>
+              {updatePersonalInfoFormErrors.length > 0 ? (
+                <Text style={styles.errorText}>
+                  Please fix the errors below.
+                </Text>
+              ) : null}
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>First Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={firstName}
+                  onChangeText={(text) => setFirstName(text)}
+                  keyboardType="default"
+                  placeholder="First Name"
+                  placeholderTextColor="#9E9E9E"
+                  returnKeyType="next"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Last Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={lastName}
+                  onChangeText={(text) => setLastName(text)}
+                  keyboardType="default"
+                  placeholder="Last Name"
+                  placeholderTextColor="#9E9E9E"
+                  returnKeyType="next"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Email</Text>
+                <TextInput
+                  style={
+                    emailError
+                      ? [styles.input, styles.inputError]
+                      : styles.input
+                  }
+                  value={email}
+                  onChangeText={(text) => setEmail(text)}
+                  keyboardType="email-address"
+                  placeholder="Email"
+                  placeholderTextColor="#9E9E9E"
+                  returnKeyType="next"
+                />
+                {emailError ? (
+                  <Text style={styles.inputErrorText}>
+                    {emailError.message}
+                  </Text>
+                ) : null}
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Phone Number</Text>
+                <TextInput
+                  style={
+                    phoneNumberError
+                      ? [styles.input, styles.inputError]
+                      : styles.input
+                  }
+                  value={phoneNumber}
+                  onChangeText={(text) => setPhoneNumber(text)}
+                  keyboardType="number-pad"
+                  placeholder="Phone Number"
+                  placeholderTextColor="#9E9E9E"
+                  returnKeyType="next"
+                />
+                {phoneNumberError ? (
+                  <Text style={styles.inputErrorText}>
+                    {phoneNumberError.message}
+                  </Text>
+                ) : null}
+              </View>
+              <TouchableOpacity
+                style={
+                  firstName === "" ||
+                  lastName === "" ||
+                  email === "" ||
+                  phoneNumber === ""
+                    ? styles.disabledUpdateUserInfoButton
+                    : styles.updateUserInfoButton
+                }
+                activeOpacity={0.8}
+                disabled={
+                  firstName === "" ||
+                  lastName === "" ||
+                  email === "" ||
+                  phoneNumber === ""
+                    ? true
+                    : false
+                }
+                onPress={onUpdatePersonalInfoPress}
+              >
+                {userUpdatingLoader ? (
+                  <ActivityIndicator size={12} color="#ffffff" />
+                ) : (
+                  <Text style={styles.updateUserInfoButtonText}>Update</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.changePasswordContainer}>
+            <View style={styles.changePasswordFormContainer}>
+              <Text style={styles.changePasswordHeader}>Change Password</Text>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Current Password</Text>
+                <TextInput
+                  style={styles.input}
+                  value={currentPassword}
+                  onChangeText={(text) => setCurrentPassword(text)}
+                  keyboardType="default"
+                  secureTextEntry={true}
+                  placeholder="Current Password"
+                  placeholderTextColor="#9E9E9E"
+                  returnKeyType="next"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>New Password</Text>
+                <TextInput
+                  style={styles.input}
+                  value={newPassword}
+                  onChangeText={(text) => setNewPassword(text)}
+                  keyboardType="default"
+                  secureTextEntry={true}
+                  placeholder="New Password"
+                  placeholderTextColor="#9E9E9E"
+                  returnKeyType="next"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Confirm Password</Text>
+                <TextInput
+                  style={styles.input}
+                  value={confirmPassword}
+                  onChangeText={(text) => setConfirmPassword(text)}
+                  keyboardType="default"
+                  secureTextEntry={true}
+                  placeholder="Confirm Password"
+                  placeholderTextColor="#9E9E9E"
+                  returnKeyType="next"
+                />
+              </View>
+              <TouchableOpacity
+                style={
+                  currentPassword === "" ||
+                  newPassword === "" ||
+                  confirmPassword === ""
+                    ? styles.disabledChangePasswordButton
+                    : styles.changePasswordButton
+                }
+                activeOpacity={0.8}
+                disabled={
+                  currentPassword === "" ||
+                  newPassword === "" ||
+                  confirmPassword === ""
+                    ? true
+                    : false
+                }
+              >
+                <Text style={styles.changePasswordButtonText}>
+                  Change Password
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            activeOpacity={0.8}
+            onPress={() => dispatch(userLogout())}
+          >
+            <Text style={styles.logoutButtonText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
+  profileSafeArea: {
+    flex: 1,
+    backgroundColor: "#f8f8f8",
+  },
+  profileScrollView: {
+    minHeight: "100%",
+    justifyContent: "center",
+    alignContent: "center",
+    paddingBottom: 20,
+  },
   screen: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f8f8f8",
+  },
+  personalInfoContainer: {
+    marginTop: 20,
+    width: Dimensions.get("screen").width - 40,
+  },
+  personalInfoHeader: {
+    width: "100%",
+    marginTop: 20,
+    fontFamily: "poppins-semibold",
+    fontSize: 18,
+    textAlign: "left",
+  },
+  errorText: {
+    fontFamily: "poppins-regular",
+    fontSize: 14,
+    color: "red",
+    marginTop: 15,
+  },
+  personalInfoFormContainer: {
+    width: "100%",
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingBottom: 20,
+    backgroundColor: "#ffffff",
+  },
+  inputContainer: {
+    width: "100%",
+    marginTop: 20,
+  },
+  inputLabel: {
+    width: "100%",
+    fontFamily: "poppins-semibold",
+    fontSize: 14,
+    textAlign: "left",
+  },
+  input: {
+    width: "100%",
+    height: 40,
+    marginTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 5,
+    backgroundColor: "#F3F3F3",
+    fontSize: 14,
+    fontFamily: "poppins-regular",
+  },
+  inputError: {
+    borderWidth: 1,
+    borderColor: "red",
+  },
+  inputErrorText: {
+    marginTop: 10,
+    fontFamily: "poppins-regular",
+    color: "red",
+  },
+  updateUserInfoButton: {
+    width: "100%",
+    height: 40,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F2811D",
+    borderRadius: 5,
+  },
+  disabledUpdateUserInfoButton: {
+    width: "100%",
+    height: 40,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fab67a",
+    borderRadius: 5,
+  },
+  updateUserInfoButtonText: {
+    fontFamily: "poppins-bold",
+    fontSize: 16,
+    color: "#ffffff",
+  },
+  changePasswordContainer: {
+    marginTop: 20,
+    width: Dimensions.get("screen").width - 40,
+  },
+  changePasswordHeader: {
+    width: "100%",
+    marginTop: 20,
+    fontFamily: "poppins-semibold",
+    fontSize: 18,
+    textAlign: "left",
+  },
+  changePasswordFormContainer: {
+    width: "100%",
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingBottom: 20,
+    backgroundColor: "#ffffff",
+  },
+  changePasswordButton: {
+    width: "100%",
+    height: 40,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F2811D",
+    borderRadius: 5,
+  },
+  disabledChangePasswordButton: {
+    width: "100%",
+    height: 40,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fab67a",
+    borderRadius: 5,
+  },
+  changePasswordButtonText: {
+    fontFamily: "poppins-bold",
+    fontSize: 16,
+    color: "#ffffff",
+  },
+  logoutButton: {
+    width: Dimensions.get("screen").width - 40,
+    height: 40,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F2811D",
+    borderRadius: 5,
+  },
+  logoutButtonText: {
+    fontFamily: "poppins-bold",
+    fontSize: 16,
+    color: "#ffffff",
   },
 });
