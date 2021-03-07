@@ -27,8 +27,8 @@ const UserChangePasswordScreen = (props) => {
 
   const [recoveryCode, setRecoveryCode] = useState("");
   const [recoveryCodeError, setRecoveryCodeError] = useState(null);
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(null);
 
@@ -42,13 +42,14 @@ const UserChangePasswordScreen = (props) => {
       setRecoveryCodeError(recoveryCodeError);
     }
 
-    const passwordError = changePasswordFormErrors.find(
+    const newPasswordError = changePasswordFormErrors.find(
       (formError) => formError.field === formFields.changePasswordPassword
     );
-    if (passwordError) {
-      setPasswordError(passwordError);
+
+    if (newPasswordError) {
+      setNewPasswordError(newPasswordError);
     } else {
-      setPasswordError(passwordError);
+      setNewPasswordError(newPasswordError);
     }
 
     const confirmPasswordError = changePasswordFormErrors.find(
@@ -64,10 +65,16 @@ const UserChangePasswordScreen = (props) => {
 
   const onChangePasswordPress = () => {
     dispatch(
-      userChangePassword(recoveryCode, password, confirmPassword, "null")
+      userChangePassword(
+        recoveryCode,
+        null,
+        newPassword,
+        confirmPassword,
+        "null"
+      )
     );
     setRecoveryCode("");
-    setPassword("");
+    setNewPassword("");
     setConfirmPassword("");
   };
 
@@ -119,23 +126,23 @@ const UserChangePasswordScreen = (props) => {
                 ) : null}
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Password</Text>
+                <Text style={styles.inputLabel}>New Password</Text>
                 <TextInput
                   style={
-                    passwordError || confirmPasswordError
+                    newPasswordError || confirmPasswordError
                       ? [styles.input, styles.inputError]
                       : styles.input
                   }
-                  value={password}
-                  onChangeText={(text) => setPassword(text)}
+                  value={newPassword}
+                  onChangeText={(text) => setNewPassword(text)}
                   keyboardType="default"
                   secureTextEntry={true}
-                  placeholder="Password"
+                  placeholder="New Password"
                   placeholderTextColor="#9E9E9E"
                 />
-                {passwordError ? (
+                {newPasswordError ? (
                   <Text style={styles.inputErrorText}>
-                    {passwordError.message}
+                    {newPasswordError.message}
                   </Text>
                 ) : null}
               </View>
@@ -163,7 +170,7 @@ const UserChangePasswordScreen = (props) => {
               <TouchableOpacity
                 style={
                   recoveryCode === "" ||
-                  password === "" ||
+                  newPassword === "" ||
                   confirmPassword === ""
                     ? styles.disabledChangePasswordButton
                     : styles.changePasswordButton
@@ -171,7 +178,7 @@ const UserChangePasswordScreen = (props) => {
                 activeOpacity={0.8}
                 disabled={
                   recoveryCode === "" ||
-                  password === "" ||
+                  newPassword === "" ||
                   confirmPassword === ""
                     ? true
                     : false

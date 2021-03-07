@@ -232,18 +232,39 @@ export const userForgotPassword = (phoneNumber, navigation) => {
 export const userChangePassword = (
   recoveryCode,
   password,
+  newPassword,
   confirmPassword,
   userId
 ) => {
-  return (dispatch) => {
-    const userChangePasswordData = {
-      recoveryCode: recoveryCode,
-      newPassword: password,
-    };
+  return async (dispatch) => {
+    let jwt;
+    try {
+      const asyncStorageJwt = await AsyncStorage.getItem("@jwt");
+      if (asyncStorageJwt) {
+        jwt = asyncStorageJwt;
+      }
+    } catch (err) {
+      return console.log(err);
+    }
+
+    let userChangePasswordData;
+
+    if (!recoveryCode && password) {
+      userChangePasswordData = {
+        password: password,
+        newPassword: newPassword,
+      };
+    } else if (!password && recoveryCode) {
+      userChangePasswordData = {
+        recoveryCode: recoveryCode,
+        newPassword: newPassword,
+      };
+    }
 
     const reqObj = {
       method: "PUT",
       headers: {
+        "x-auth-token": jwt ? jwt : "",
         "Content-Type": "application/json",
         Accepts: "application/json",
       },
@@ -252,7 +273,7 @@ export const userChangePassword = (
 
     dispatch({ type: USER_IS_CHANGING_PASSWORD });
 
-    if (password !== confirmPassword) {
+    if (newPassword !== confirmPassword) {
       const formErrors = [];
       formErrors.push({
         field: "confirmPassword",
@@ -298,7 +319,9 @@ export const userChangePassword = (
         }
 
         dispatch({ type: REMOVE_CHANGE_PASSWORD_ERRORS });
-        dispatch(userLogin(user.phoneNumber, password));
+        if (recoveryCode) {
+          dispatch(userLogin(user.phoneNumber, newPassword));
+        }
         dispatch({ type: USER_IS_NOT_CHANGING_PASSWORD });
       })
       .catch((err) => {
