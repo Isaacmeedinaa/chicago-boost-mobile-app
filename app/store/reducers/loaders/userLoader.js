@@ -9,6 +9,8 @@ import {
   USER_IS_NOT_CHANGING_PASSWORD,
   USER_IS_UPDATING,
   USER_IS_NOT_UPDATING,
+  USER_MESSAGE_IS_SENDING,
+  USER_MESSAGE_IS_NOT_SENDING,
 } from "../../actions/loaders/userLoader";
 
 const initialState = {
@@ -17,6 +19,7 @@ const initialState = {
   forgotPasswordLoader: false,
   changePasswordLoader: false,
   updatingLoader: false,
+  messageLoader: false,
 };
 
 const userLoader = (state = initialState, action) => {
@@ -79,6 +82,18 @@ const userLoader = (state = initialState, action) => {
       return {
         ...state,
         updatingLoader: false,
+      };
+
+    case USER_MESSAGE_IS_SENDING:
+      return {
+        ...state,
+        messageLoader: true,
+      };
+
+    case USER_MESSAGE_IS_NOT_SENDING:
+      return {
+        ...state,
+        messageLoader: false,
       };
 
     default:

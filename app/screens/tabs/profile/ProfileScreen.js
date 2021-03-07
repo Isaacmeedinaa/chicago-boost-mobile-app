@@ -195,7 +195,7 @@ const ProfileScreen = () => {
                   value={phoneNumber}
                   onChangeText={(text) => setPhoneNumber(text)}
                   keyboardType="number-pad"
-                  placeholder="Phone Number"
+                  placeholder="Phone Number (e.g 17085552020)"
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />

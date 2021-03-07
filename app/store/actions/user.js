@@ -18,6 +18,8 @@ import {
   USER_IS_NOT_CHANGING_PASSWORD,
   USER_IS_UPDATING,
   USER_IS_NOT_UPDATING,
+  USER_MESSAGE_IS_SENDING,
+  USER_MESSAGE_IS_NOT_SENDING,
 } from "./loaders/userLoader";
 
 // Errors
@@ -452,6 +454,53 @@ export const userUpdatePersonalInfo = (
         console.log(err);
         dispatch({ type: REMOVE_UPDATE_PERSONAL_INFO_ERRORS });
         dispatch({ type: USER_IS_NOT_UPDATING });
+      });
+  };
+};
+
+export const userSendMessage = (message) => {
+  return async (dispatch, getState) => {
+    let jwt;
+    try {
+      const asyncStorageJwt = await AsyncStorage.getItem("@jwt");
+      if (asyncStorageJwt) {
+        jwt = asyncStorageJwt;
+      }
+    } catch (err) {
+      return console.log(err);
+    }
+
+    const user = getState().user;
+
+    const userSendMessageData = {
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      message: message,
+    };
+
+    const reqObj = {
+      method: "POST",
+      headers: {
+        "x-auth-token": jwt,
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+      body: JSON.stringify(userSendMessageData),
+    };
+
+    dispatch({ type: USER_MESSAGE_IS_SENDING });
+    fetch(`${API_BASE_URL}/users/send-contact-email`, reqObj)
+      .then((resp) => resp.json())
+      .then((email) => {
+        if (email.message) {
+          dispatch({ type: USER_MESSAGE_IS_NOT_SENDING });
+          return;
+        }
+
+        dispatch({ type: USER_MESSAGE_IS_NOT_SENDING });
+      })
+      .catch((err) => {
+        dispatch({ type: USER_MESSAGE_IS_NOT_SENDING });
       });
   };
 };
