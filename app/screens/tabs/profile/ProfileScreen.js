@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   userUpdatePersonalInfo,
   userLogout,
+  userChangePassword,
 } from "../../../store/actions/user";
 import { formFields } from "../../../constants/formFields";
 
@@ -27,6 +28,12 @@ const ProfileScreen = () => {
   const updatePersonalInfoFormErrors = useSelector(
     (state) => state.updatePersonalInfoFormErrors
   );
+  const changePasswordLoader = useSelector(
+    (state) => state.userLoader.changePasswordLoader
+  );
+  const changePasswordFormErrors = useSelector(
+    (state) => state.changePasswordFormErrors
+  );
 
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
@@ -35,8 +42,11 @@ const ProfileScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [phoneNumberError, setPhoneNumberError] = useState(null);
   const [currentPassword, setCurrentPassword] = useState("");
+  const [currentPasswordError, setCurrentPasswordError] = useState(null);
   const [newPassword, setNewPassword] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(null);
 
   useEffect(() => {
     const emailError = updatePersonalInfoFormErrors.find(
@@ -59,10 +69,56 @@ const ProfileScreen = () => {
     }
   }, [updatePersonalInfoFormErrors]);
 
+  useEffect(() => {
+    const currentPasswordError = changePasswordFormErrors.find(
+      (formError) =>
+        formError.field === formFields.changePasswordCurrentPassword
+    );
+    if (currentPasswordError) {
+      setCurrentPasswordError(currentPasswordError);
+    } else {
+      setCurrentPasswordError(currentPasswordError);
+    }
+
+    const newPasswordError = changePasswordFormErrors.find(
+      (formError) => formError.field === formFields.changePasswordPassword
+    );
+    if (newPasswordError) {
+      setNewPasswordError(newPasswordError);
+    } else {
+      setNewPasswordError(newPasswordError);
+    }
+
+    const confirmPasswordError = changePasswordFormErrors.find(
+      (formError) =>
+        formError.field === formFields.changePasswordConfirmPassword
+    );
+    if (confirmPasswordError) {
+      setConfirmPasswordError(confirmPasswordError);
+    } else {
+      setConfirmPasswordError(confirmPasswordError);
+    }
+  }, [changePasswordFormErrors]);
+
   const onUpdatePersonalInfoPress = () => {
     dispatch(
       userUpdatePersonalInfo(firstName, lastName, email, phoneNumber, user._id)
     );
+  };
+
+  const onChangePasswordPress = () => {
+    dispatch(
+      userChangePassword(
+        null,
+        currentPassword,
+        newPassword,
+        confirmPassword,
+        user._id
+      )
+    );
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
   };
 
   return (
@@ -182,8 +238,17 @@ const ProfileScreen = () => {
               <Text style={styles.changePasswordHeader}>Change Password</Text>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Current Password</Text>
+                {changePasswordFormErrors.length > 0 ? (
+                  <Text style={styles.errorText}>
+                    Please fix the errors below.
+                  </Text>
+                ) : null}
                 <TextInput
-                  style={styles.input}
+                  style={
+                    currentPasswordError
+                      ? [styles.input, styles.inputError]
+                      : styles.input
+                  }
                   value={currentPassword}
                   onChangeText={(text) => setCurrentPassword(text)}
                   keyboardType="default"
@@ -192,11 +257,20 @@ const ProfileScreen = () => {
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
+                {currentPasswordError ? (
+                  <Text style={styles.inputErrorText}>
+                    {currentPasswordError.message}
+                  </Text>
+                ) : null}
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>New Password</Text>
                 <TextInput
-                  style={styles.input}
+                  style={
+                    newPasswordError || confirmPasswordError
+                      ? [styles.input, styles.inputError]
+                      : styles.input
+                  }
                   value={newPassword}
                   onChangeText={(text) => setNewPassword(text)}
                   keyboardType="default"
@@ -205,11 +279,20 @@ const ProfileScreen = () => {
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
+                {newPasswordError ? (
+                  <Text style={styles.inputErrorText}>
+                    {newPasswordError.message}
+                  </Text>
+                ) : null}
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Confirm Password</Text>
                 <TextInput
-                  style={styles.input}
+                  style={
+                    confirmPasswordError
+                      ? [styles.input, styles.inputError]
+                      : styles.input
+                  }
                   value={confirmPassword}
                   onChangeText={(text) => setConfirmPassword(text)}
                   keyboardType="default"
@@ -218,6 +301,11 @@ const ProfileScreen = () => {
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
+                {confirmPasswordError ? (
+                  <Text style={styles.inputErrorText}>
+                    {confirmPasswordError.message}
+                  </Text>
+                ) : null}
               </View>
               <TouchableOpacity
                 style={
@@ -235,10 +323,15 @@ const ProfileScreen = () => {
                     ? true
                     : false
                 }
+                onPress={onChangePasswordPress}
               >
-                <Text style={styles.changePasswordButtonText}>
-                  Change Password
-                </Text>
+                {changePasswordLoader ? (
+                  <ActivityIndicator color="#ffffff" size={12} />
+                ) : (
+                  <Text style={styles.changePasswordButtonText}>
+                    Change Password
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -263,7 +356,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8f8f8",
   },
   profileScrollView: {
-    minHeight: "100%",
     justifyContent: "center",
     alignContent: "center",
     paddingBottom: 20,
