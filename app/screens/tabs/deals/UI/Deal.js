@@ -8,9 +8,14 @@ import {
   Linking,
 } from "react-native";
 import moment from "moment";
+import "moment/locale/es";
+import "moment/locale/es-us";
 import Swiper from "react-native-swiper";
+import * as Localization from "expo-localization";
+import i18n from "i18n-js";
 
 const Deal = ({ deal }) => {
+  moment.locale(Localization.locale);
   const startDate = moment(deal.startDate).format("MMMM D, YYYY");
   const endDate = moment(deal.endDate).format("MMMM DD, YYYY");
 
@@ -48,7 +53,7 @@ const Deal = ({ deal }) => {
     <View style={styles.dealContainer}>
       <Text style={styles.dealTitle}>{deal.title}</Text>
       <Text style={styles.validThruText}>
-        Valid thru {startDate} - {endDate}
+        {i18n.t("dealValidThru")} {startDate} - {endDate}
       </Text>
       <Text style={styles.dealDescription}>{deal.description}</Text>
       {deal.photos.length > 0 ? (
@@ -84,7 +89,9 @@ const Deal = ({ deal }) => {
       ) : null}
       {deal.locations.length > 0 ? (
         <View style={styles.locationsInfoContainer}>
-          <Text style={styles.locationHeaderText}>Locations:</Text>
+          <Text style={styles.locationHeaderText}>
+            {i18n.t("dealLocation")}:
+          </Text>
           <View style={styles.locationsListContainer}>{renderLocations()}</View>
         </View>
       ) : null}

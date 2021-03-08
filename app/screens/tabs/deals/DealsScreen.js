@@ -8,6 +8,7 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
+import i18n from "i18n-js";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,8 +35,8 @@ const DealsScreen = () => {
         );
         if (status !== "granted")
           return Alert.alert(
-            "Notifications",
-            "Please enable notifications to receive alerts on the newest deals!",
+            i18n.t("notificationsAlertTitle"),
+            i18n.t("notificationsAlertMessage"),
             [{ text: "OK" }]
           );
 
