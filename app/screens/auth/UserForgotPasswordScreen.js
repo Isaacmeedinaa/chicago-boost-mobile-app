@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import i18n from "i18n-js";
 
 import { useDispatch, useSelector } from "react-redux";
 import { userForgotPassword } from "../../store/actions/user";
@@ -47,25 +48,25 @@ const UserForgotPasswordScreen = (props) => {
         <View style={styles.screen}>
           <View style={styles.screenContainer}>
             <View style={styles.topTextsContainer}>
-              <Text style={styles.title}>Trouble logging in?</Text>
+              <Text style={styles.title}>{i18n.t("forgotPasswordTitle")}</Text>
               <Text style={styles.subtitle}>
-                Enter your phone number and we will send you a recovery code.
+                {i18n.t("forgotPasswordSubtitle")}
               </Text>
               <Text
                 style={styles.topQuestionButton}
                 onPress={() => props.navigation.navigate("Login")}
               >
-                Back to login
+                {i18n.t("forgotPasswordSubtitleButtonText")}
               </Text>
             </View>
             <View style={styles.formContainer}>
               {forgotPasswordFormErrors ? (
-                <Text style={styles.errorText}>
-                  Phone number does not exist!
-                </Text>
+                <Text style={styles.errorText}>{i18n.t("errorText")}</Text>
               ) : null}
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Phone Number</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("phoneNumberLabel")}
+                </Text>
                 <TextInput
                   style={
                     forgotPasswordFormErrors
@@ -75,7 +76,9 @@ const UserForgotPasswordScreen = (props) => {
                   value={phoneNumber}
                   onChangeText={(text) => setPhoneNumber(text)}
                   keyboardType="number-pad"
-                  placeholder="Phone Number (e.g 17085552020)"
+                  placeholder={`${i18n.t(
+                    "phoneNumberLabel"
+                  )} (e.g 17085552020)`}
                   placeholderTextColor="#9E9E9E"
                 />
               </View>
@@ -92,7 +95,9 @@ const UserForgotPasswordScreen = (props) => {
                 {forgotPasswordLoader ? (
                   <ActivityIndicator color="#ffffff" size={12} />
                 ) : (
-                  <Text style={styles.sendCodeButtonText}>Send Code</Text>
+                  <Text style={styles.sendCodeButtonText}>
+                    {i18n.t("forgotPasswordButtonText")}
+                  </Text>
                 )}
               </TouchableOpacity>
             </View>

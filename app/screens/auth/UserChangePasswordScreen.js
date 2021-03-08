@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import i18n from "i18n-js";
 
 import { useDispatch, useSelector } from "react-redux";
 import { userChangePassword } from "../../store/actions/user";
@@ -88,25 +89,25 @@ const UserChangePasswordScreen = (props) => {
         <View style={styles.screen}>
           <View style={styles.screenContainer}>
             <View style={styles.topTextsContainer}>
-              <Text style={styles.title}>Change your password</Text>
+              <Text style={styles.title}>{i18n.t("changePasswordTitle")}</Text>
               <Text style={styles.subtitle}>
-                Enter the recovery code and a new password
+                {i18n.t("changePasswordSubtitle")}
               </Text>
               <Text
                 style={styles.topQuestionButton}
                 onPress={() => props.navigation.navigate("Login")}
               >
-                Back to login
+                {i18n.t("changePasswordSubtitleButtonText")}
               </Text>
             </View>
             <View style={styles.formContainer}>
               {changePasswordFormErrors.length > 0 ? (
-                <Text style={styles.errorText}>
-                  Please fix the errors below.
-                </Text>
+                <Text style={styles.errorText}>{i18n.t("errorText")}</Text>
               ) : null}
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Recovery Code</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("recoveryCodeLabel")}
+                </Text>
                 <TextInput
                   style={
                     recoveryCodeError
@@ -116,7 +117,7 @@ const UserChangePasswordScreen = (props) => {
                   value={recoveryCode}
                   onChangeText={(text) => setRecoveryCode(text)}
                   keyboardType="number-pad"
-                  placeholder="Recovery Code (e.g 123456)"
+                  placeholder={i18n.t("recoveryCodeLabel")}
                   placeholderTextColor="#9E9E9E"
                 />
                 {recoveryCodeError ? (
@@ -126,7 +127,9 @@ const UserChangePasswordScreen = (props) => {
                 ) : null}
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>New Password</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("newPasswordLabel")}
+                </Text>
                 <TextInput
                   style={
                     newPasswordError || confirmPasswordError
@@ -137,7 +140,7 @@ const UserChangePasswordScreen = (props) => {
                   onChangeText={(text) => setNewPassword(text)}
                   keyboardType="default"
                   secureTextEntry={true}
-                  placeholder="New Password"
+                  placeholder={i18n.t("newPasswordLabel")}
                   placeholderTextColor="#9E9E9E"
                 />
                 {newPasswordError ? (
@@ -147,7 +150,9 @@ const UserChangePasswordScreen = (props) => {
                 ) : null}
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Confirm Password</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("confirmPasswordLabel")}
+                </Text>
                 <TextInput
                   style={
                     confirmPasswordError
@@ -158,7 +163,7 @@ const UserChangePasswordScreen = (props) => {
                   onChangeText={(text) => setConfirmPassword(text)}
                   keyboardType="default"
                   secureTextEntry={true}
-                  placeholder="Confirm Password"
+                  placeholder={i18n.t("confirmPasswordLabel")}
                   placeholderTextColor="#9E9E9E"
                 />
                 {confirmPasswordError ? (
@@ -189,7 +194,7 @@ const UserChangePasswordScreen = (props) => {
                   <ActivityIndicator color="#ffffff" size={12} />
                 ) : (
                   <Text style={styles.changePasswordButtonText}>
-                    Change Password
+                    {i18n.t("changePasswordButtonText")}
                   </Text>
                 )}
               </TouchableOpacity>

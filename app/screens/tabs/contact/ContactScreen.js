@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Linking,
 } from "react-native";
+import i18n from "i18n-js";
 import { useDispatch, useSelector } from "react-redux";
 import { userSendMessage } from "../../../store/actions/user";
 
@@ -35,15 +36,15 @@ const ContactScreen = () => {
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.contactFormContainer}>
-        <Text style={styles.contactFormHeader}>Contact Us</Text>
+        <Text style={styles.contactFormHeader}>{i18n.t("contactUsTitle")}</Text>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Message</Text>
+          <Text style={styles.inputLabel}>{i18n.t("messageLabel")}</Text>
           <TextInput
             style={styles.input}
             value={message}
             onChangeText={(text) => setMessage(text)}
             keyboardType="default"
-            placeholder="Message"
+            placeholder={i18n.t("messageLabel")}
             placeholderTextColor="#9E9E9E"
             multiline={true}
           />
@@ -61,11 +62,13 @@ const ContactScreen = () => {
           {messageLoader ? (
             <ActivityIndicator color="#ffffff" size={12} />
           ) : (
-            <Text style={styles.sendMessageButtonText}>Send Message</Text>
+            <Text style={styles.sendMessageButtonText}>
+              {i18n.t("contactUsButtonText")}
+            </Text>
           )}
         </TouchableOpacity>
         <Text onPress={onEmailPress} style={styles.email}>
-          Our email: fadi@chicagoboost.com
+          {i18n.t("contactUsOurEmail")}: fadi@chicagoboost.com
         </Text>
       </View>
     </ScrollView>

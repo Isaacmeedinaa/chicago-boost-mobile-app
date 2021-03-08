@@ -7,6 +7,13 @@ import store from "./store/store";
 import App from "./App";
 
 import * as Notifications from "expo-notifications";
+import * as Localization from "expo-localization";
+import i18n from "i18n-js";
+import { translations } from "./constants/translations";
+
+i18n.translations = translations;
+i18n.locale = Localization.locale;
+i18n.fallbacks = true;
 
 const Main = () => {
   const [appState] = useState(AppState.currentState);

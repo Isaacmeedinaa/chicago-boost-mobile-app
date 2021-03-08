@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import i18n from "i18n-js";
 
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../../store/actions/user";
@@ -45,17 +46,17 @@ const UserLoginScreen = (props) => {
         <View style={styles.screen}>
           <View style={styles.screenContainer}>
             <View style={styles.topTextsContainer}>
-              <Text style={styles.title}>Welcome back!</Text>
-              <Text style={styles.subtitle}>Please login to continue.</Text>
+              <Text style={styles.title}>{i18n.t("loginTitle")}</Text>
+              <Text style={styles.subtitle}>{i18n.t("loginSubtitle")}</Text>
             </View>
             <View style={styles.formContainer}>
               {loginFormErrors ? (
-                <Text style={styles.errorText}>
-                  Incorrect phone number or password!
-                </Text>
+                <Text style={styles.errorText}>{i18n.t("loginErrorText")}</Text>
               ) : null}
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Phone Number</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("phoneNumberLabel")}
+                </Text>
                 <TextInput
                   style={
                     loginFormErrors
@@ -65,13 +66,15 @@ const UserLoginScreen = (props) => {
                   value={phoneNumber}
                   onChangeText={(text) => setPhoneNumber(text)}
                   keyboardType="number-pad"
-                  placeholder="Phone Number (e.g 17085552020)"
+                  placeholder={`${i18n.t(
+                    "phoneNumberLabel"
+                  )} (e.g 17085552020)`}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Password</Text>
+                <Text style={styles.inputLabel}>{i18n.t("passwordLabel")}</Text>
                 <TextInput
                   style={
                     loginFormErrors
@@ -82,7 +85,7 @@ const UserLoginScreen = (props) => {
                   onChangeText={(text) => setPassword(text)}
                   keyboardType="default"
                   secureTextEntry={true}
-                  placeholder="Password"
+                  placeholder={i18n.t("passwordLabel")}
                   placeholderTextColor="#9E9E9E"
                 />
               </View>
@@ -99,7 +102,9 @@ const UserLoginScreen = (props) => {
                 {loginLoader ? (
                   <ActivityIndicator color="#ffffff" size={12} />
                 ) : (
-                  <Text style={styles.loginButtonText}>Login</Text>
+                  <Text style={styles.loginButtonText}>
+                    {i18n.t("loginButtonText")}
+                  </Text>
                 )}
               </TouchableOpacity>
             </View>
@@ -109,18 +114,18 @@ const UserLoginScreen = (props) => {
                   style={styles.forgotPasswordButton}
                   onPress={() => props.navigation.navigate("ForgotPassword")}
                 >
-                  Forgot your password?
+                  {i18n.t("loginForgotPasswordQuestion")}
                 </Text>
               </View>
               <View style={styles.registerTextContainer}>
                 <Text style={styles.registerTextQuestion}>
-                  New to Chicago Boost?
+                  {i18n.t("loginRegisterQuestion")}
                 </Text>
                 <Text
                   style={styles.registerButton}
                   onPress={() => props.navigation.navigate("Register")}
                 >
-                  Register!
+                  {i18n.t("loginRegisterText")}
                 </Text>
               </View>
             </View>

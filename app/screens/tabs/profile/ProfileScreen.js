@@ -10,6 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import i18n from "i18n-js";
 import { useDispatch, useSelector } from "react-redux";
 import {
   userUpdatePersonalInfo,
@@ -132,39 +133,39 @@ const ProfileScreen = () => {
           <View style={styles.personalInfoContainer}>
             <View style={styles.personalInfoFormContainer}>
               <Text style={styles.personalInfoHeader}>
-                Personal Information
+                {i18n.t("profilePersonalInfoTitle")}
               </Text>
               {updatePersonalInfoFormErrors.length > 0 ? (
-                <Text style={styles.errorText}>
-                  Please fix the errors below.
-                </Text>
+                <Text style={styles.errorText}>{i18n.t("errorText")}</Text>
               ) : null}
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>First Name</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("firstNameLabel")}
+                </Text>
                 <TextInput
                   style={styles.input}
                   value={firstName}
                   onChangeText={(text) => setFirstName(text)}
                   keyboardType="default"
-                  placeholder="First Name"
+                  placeholder={i18n.t("firstNameLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Last Name</Text>
+                <Text style={styles.inputLabel}>{i18n.t("lastNameLabel")}</Text>
                 <TextInput
                   style={styles.input}
                   value={lastName}
                   onChangeText={(text) => setLastName(text)}
                   keyboardType="default"
-                  placeholder="Last Name"
+                  placeholder={i18n.t("lastNameLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Email</Text>
+                <Text style={styles.inputLabel}>{i18n.t("emailLabel")}</Text>
                 <TextInput
                   style={
                     emailError
@@ -174,7 +175,7 @@ const ProfileScreen = () => {
                   value={email}
                   onChangeText={(text) => setEmail(text)}
                   keyboardType="email-address"
-                  placeholder="Email"
+                  placeholder={i18n.t("emailLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
@@ -185,7 +186,9 @@ const ProfileScreen = () => {
                 ) : null}
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Phone Number</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("phoneNumberLabel")}
+                </Text>
                 <TextInput
                   style={
                     phoneNumberError
@@ -195,7 +198,9 @@ const ProfileScreen = () => {
                   value={phoneNumber}
                   onChangeText={(text) => setPhoneNumber(text)}
                   keyboardType="number-pad"
-                  placeholder="Phone Number (e.g 17085552020)"
+                  placeholder={`${i18n.t(
+                    "phoneNumberLabel"
+                  )} (e.g 17085552020)`}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
@@ -228,21 +233,25 @@ const ProfileScreen = () => {
                 {userUpdatingLoader ? (
                   <ActivityIndicator size={12} color="#ffffff" />
                 ) : (
-                  <Text style={styles.updateUserInfoButtonText}>Update</Text>
+                  <Text style={styles.updateUserInfoButtonText}>
+                    {i18n.t("profilePersonalInfoButtonText")}
+                  </Text>
                 )}
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.changePasswordContainer}>
             <View style={styles.changePasswordFormContainer}>
-              <Text style={styles.changePasswordHeader}>Change Password</Text>
+              <Text style={styles.changePasswordHeader}>
+                {i18n.t("changePasswordTitle")}
+              </Text>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Current Password</Text>
                 {changePasswordFormErrors.length > 0 ? (
-                  <Text style={styles.errorText}>
-                    Please fix the errors below.
-                  </Text>
+                  <Text style={styles.errorText}>{i18n.t("errorText")}</Text>
                 ) : null}
+                <Text style={styles.inputLabel}>
+                  {i18n.t("currentPasswordLabel")}
+                </Text>
                 <TextInput
                   style={
                     currentPasswordError
@@ -253,7 +262,7 @@ const ProfileScreen = () => {
                   onChangeText={(text) => setCurrentPassword(text)}
                   keyboardType="default"
                   secureTextEntry={true}
-                  placeholder="Current Password"
+                  placeholder={i18n.t("currentPasswordLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
@@ -264,7 +273,9 @@ const ProfileScreen = () => {
                 ) : null}
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>New Password</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("newPasswordLabel")}
+                </Text>
                 <TextInput
                   style={
                     newPasswordError || confirmPasswordError
@@ -275,7 +286,7 @@ const ProfileScreen = () => {
                   onChangeText={(text) => setNewPassword(text)}
                   keyboardType="default"
                   secureTextEntry={true}
-                  placeholder="New Password"
+                  placeholder={i18n.t("newPasswordLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
@@ -286,7 +297,9 @@ const ProfileScreen = () => {
                 ) : null}
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Confirm Password</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("confirmPasswordLabel")}
+                </Text>
                 <TextInput
                   style={
                     confirmPasswordError
@@ -297,7 +310,7 @@ const ProfileScreen = () => {
                   onChangeText={(text) => setConfirmPassword(text)}
                   keyboardType="default"
                   secureTextEntry={true}
-                  placeholder="Confirm Password"
+                  placeholder={i18n.t("confirmPasswordLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
@@ -329,7 +342,7 @@ const ProfileScreen = () => {
                   <ActivityIndicator color="#ffffff" size={12} />
                 ) : (
                   <Text style={styles.changePasswordButtonText}>
-                    Change Password
+                    {i18n.t("changePasswordButtonText")}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -340,7 +353,9 @@ const ProfileScreen = () => {
             activeOpacity={0.8}
             onPress={() => dispatch(userLogout())}
           >
-            <Text style={styles.logoutButtonText}>Logout</Text>
+            <Text style={styles.logoutButtonText}>
+              {i18n.t("logoutButtonText")}
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>

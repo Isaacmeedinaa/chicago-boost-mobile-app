@@ -9,6 +9,7 @@ import {
   TextInput,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import i18n from "i18n-js";
 
 import { useDispatch, useSelector } from "react-redux";
 import { userRegister } from "../../store/actions/user";
@@ -87,49 +88,51 @@ const UserRegisterScreen = (props) => {
         <View style={styles.screen}>
           <View style={styles.screenContainer}>
             <View style={styles.topTextsContainer}>
-              <Text style={styles.title}>Create your account</Text>
+              <Text style={styles.title}>{i18n.t("registerTitle")}</Text>
               <View style={styles.topTextQuestionContainer}>
-                <Text style={styles.topQuestion}>Already have an account?</Text>
+                <Text style={styles.topQuestion}>
+                  {i18n.t("registerSubtitleQuestion")}
+                </Text>
                 <Text
                   style={styles.topQuestionButton}
                   onPress={() => props.navigation.navigate("Login")}
                 >
-                  Login
+                  {i18n.t("registerSubtitleButtonText")}
                 </Text>
               </View>
             </View>
             <View style={styles.formContainer}>
               {registerFormErrors.length > 0 ? (
-                <Text style={styles.errorText}>
-                  Please fix the errors below.
-                </Text>
+                <Text style={styles.errorText}>{i18n.t("errorText")}</Text>
               ) : null}
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>First Name</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("firstNameLabel")}
+                </Text>
                 <TextInput
                   style={styles.input}
                   value={firstName}
                   onChangeText={(text) => setFirstName(text)}
                   keyboardType="default"
-                  placeholder="First Name"
+                  placeholder={i18n.t("firstNameLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Last Name</Text>
+                <Text style={styles.inputLabel}>{i18n.t("lastNameLabel")}</Text>
                 <TextInput
                   style={styles.input}
                   value={lastName}
                   onChangeText={(text) => setLastName(text)}
                   keyboardType="default"
-                  placeholder="Last Name"
+                  placeholder={i18n.t("lastNameLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Email</Text>
+                <Text style={styles.inputLabel}>{i18n.t("emailLabel")}</Text>
                 <TextInput
                   style={
                     emailError
@@ -139,7 +142,7 @@ const UserRegisterScreen = (props) => {
                   value={email}
                   onChangeText={(text) => setEmail(text)}
                   keyboardType="email-address"
-                  placeholder="Email"
+                  placeholder={i18n.t("emailLabel")}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
@@ -150,7 +153,9 @@ const UserRegisterScreen = (props) => {
                 ) : null}
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Phone Number</Text>
+                <Text style={styles.inputLabel}>
+                  {i18n.t("phoneNumberLabel")}
+                </Text>
                 <TextInput
                   style={
                     phoneNumberError
@@ -160,7 +165,9 @@ const UserRegisterScreen = (props) => {
                   value={phoneNumber}
                   onChangeText={(text) => setPhoneNumber(text)}
                   keyboardType="number-pad"
-                  placeholder="Phone Number (e.g 17085552020)"
+                  placeholder={`${i18n.t(
+                    "phoneNumberLabel"
+                  )} (e.g 17085552020)`}
                   placeholderTextColor="#9E9E9E"
                   returnKeyType="next"
                 />
@@ -171,7 +178,7 @@ const UserRegisterScreen = (props) => {
                 ) : null}
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Password</Text>
+                <Text style={styles.inputLabel}>{i18n.t("passwordLabel")}</Text>
                 <TextInput
                   style={
                     passwordError
@@ -182,7 +189,7 @@ const UserRegisterScreen = (props) => {
                   onChangeText={(text) => setPassword(text)}
                   keyboardType="default"
                   secureTextEntry={true}
-                  placeholder="Password"
+                  placeholder={i18n.t("passwordLabel")}
                   placeholderTextColor="#9E9E9E"
                 />
                 {passwordError ? (
@@ -216,7 +223,9 @@ const UserRegisterScreen = (props) => {
                 {registerLoader ? (
                   <ActivityIndicator color="#ffffff" size={12} />
                 ) : (
-                  <Text style={styles.registerButtonText}>Register</Text>
+                  <Text style={styles.registerButtonText}>
+                    {i18n.t("registerButtonText")}
+                  </Text>
                 )}
               </TouchableOpacity>
             </View>

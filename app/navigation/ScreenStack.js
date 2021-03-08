@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import i18n from "i18n-js";
 
 // Auth Screens
 import UserLoginScreen from "../screens/auth/UserLoginScreen";
@@ -62,7 +63,11 @@ const DealsScreens = () => {
       initialRouteName="Deals"
       screenOptions={dealsStackOptions}
     >
-      <DealsStack.Screen name="Deals" component={DealsScreen} />
+      <DealsStack.Screen
+        name="Deals"
+        component={DealsScreen}
+        options={{ title: i18n.t("dealsTitle") }}
+      />
     </DealsStack.Navigator>
   );
 };
@@ -88,7 +93,11 @@ const LocationsScreens = () => {
       initialRouteName="Locations"
       screenOptions={locationsStackOptions}
     >
-      <LocationsStack.Screen name="Locations" component={LocationsScreen} />
+      <LocationsStack.Screen
+        name="Locations"
+        component={LocationsScreen}
+        options={{ title: i18n.t("locationsTitle") }}
+      />
     </LocationsStack.Navigator>
   );
 };
@@ -114,7 +123,11 @@ const ProfileScreens = () => {
       initialRouteName="Profile"
       screenOptions={profileStackOptions}
     >
-      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ title: i18n.t("profileTitle") }}
+      />
     </ProfileStack.Navigator>
   );
 };
@@ -140,7 +153,11 @@ const ContactScreens = () => {
       initialRouteName="Contact"
       screenOptions={contactStackOptions}
     >
-      <ContactStack.Screen name="Contact" component={ContactScreen} />
+      <ContactStack.Screen
+        name="Contact"
+        component={ContactScreen}
+        options={{ title: i18n.t("contactTitle") }}
+      />
     </ContactStack.Navigator>
   );
 };
