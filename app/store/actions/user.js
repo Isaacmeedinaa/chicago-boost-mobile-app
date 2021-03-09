@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Localization from "expo-localization";
 
 // URL
 import { API_BASE_URL } from "../../constants/urls";
@@ -158,10 +159,23 @@ export const userRegister = (
             const formErrors = firstFormErrors.filter(
               (error) => error.field !== "password"
             );
+            let message;
+            if (
+              Localization.locale === "en-US" ||
+              Localization.locale === "en"
+            ) {
+              message =
+                "Password should at least be 6 characters long, contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.";
+            } else if (
+              Localization.locale === "es-US" ||
+              Localization.locale === "es"
+            ) {
+              message =
+                "La contraseña debe tener al menos 6 caracteres, contener al menos 1 letra minúscula, 1 letra mayúscula, 1 número y 1 símbolo.";
+            }
             formErrors.push({
               field: "password",
-              message:
-                "Password should at least be 6 characters long, contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.",
+              message: message,
             });
 
             dispatch({
@@ -306,10 +320,23 @@ export const userChangePassword = (
           );
           if (passwordValidationError) {
             const formErrors = [];
+            let message;
+            if (
+              Localization.locale === "en-US" ||
+              Localization.locale === "en"
+            ) {
+              message =
+                "Password should at least be 6 characters long, contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.";
+            } else if (
+              Localization.locale === "es-US" ||
+              Localization.locale === "es"
+            ) {
+              message =
+                "La contraseña debe tener al menos 6 caracteres, contener al menos 1 letra minúscula, 1 letra mayúscula, 1 número y 1 símbolo.";
+            }
             formErrors.push({
               field: "password",
-              message:
-                "Password should at least be 6 characters long, contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.",
+              message: message,
             });
             dispatch({
               type: SET_CHANGE_PASSWORD_ERRORS,
