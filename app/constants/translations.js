@@ -2,7 +2,7 @@ export const translations = {
   en: {
     loginTitle: "Welcome back!",
     loginSubtitle: "Please login to continue.",
-    loginErrorText: "¡Número de teléfono o contraseña incorrectos!",
+    loginErrorText: "Phone number or password are incorrect!",
     loginButtonText: "Login",
     loginForgotPasswordQuestion: "Forgot your password?",
     loginRegisterQuestion: "New to Chicago Boost?",

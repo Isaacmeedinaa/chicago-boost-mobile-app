@@ -57,6 +57,7 @@ export const userLogin = (phoneNumber, password) => {
     const reqObj = {
       method: "POST",
       headers: {
+        "x-user-language": Localization.locale,
         "Content-Type": "application/json",
         Accepts: "application/json",
       },
@@ -134,6 +135,7 @@ export const userRegister = (
     const reqObj = {
       method: "POST",
       headers: {
+        "x-user-language": Localization.locale,
         "Content-Type": "application/json",
         Accepts: "application/json",
       },
@@ -218,6 +220,7 @@ export const userForgotPassword = (phoneNumber, navigation) => {
     const reqObj = {
       method: "POST",
       headers: {
+        "x-user-language": Localization.locale,
         "Content-Type": "application/json",
         Accepts: "application/json",
       },
@@ -229,7 +232,12 @@ export const userForgotPassword = (phoneNumber, navigation) => {
       .then((resp) => resp.json())
       .then((recoveryCode) => {
         if (recoveryCode.message) {
-          dispatch({ type: SET_FORGOT_PASSWORD_ERRORS });
+          const formErrors = [];
+          formErrors.push(recoveryCode);
+          dispatch({
+            type: SET_FORGOT_PASSWORD_ERRORS,
+            formErrors: formErrors,
+          });
           dispatch({ type: USER_IS_NOT_REQUESTING_RECOVERY_CODE });
           return;
         }
@@ -281,6 +289,7 @@ export const userChangePassword = (
       method: "PUT",
       headers: {
         "x-auth-token": jwt ? jwt : "",
+        "x-user-language": Localization.locale,
         "Content-Type": "application/json",
         Accepts: "application/json",
       },
@@ -291,9 +300,18 @@ export const userChangePassword = (
 
     if (newPassword !== confirmPassword) {
       const formErrors = [];
+      let message;
+      if (Localization.locale === "en-US" || Localization.locale === "en") {
+        message = "Passwords do not match!";
+      } else if (
+        Localization.locale === "es-US" ||
+        Localization.locale === "es"
+      ) {
+        message = "¡Las contraseñas no coinciden!";
+      }
       formErrors.push({
         field: "confirmPassword",
-        message: "Passwords do not match!",
+        message: message,
       });
       dispatch({ type: SET_CHANGE_PASSWORD_ERRORS, formErrors: formErrors });
       dispatch({ type: USER_IS_NOT_CHANGING_PASSWORD });
@@ -387,6 +405,7 @@ export const userUpdatePushToken = (pushToken) => {
       method: "PUT",
       headers: {
         "x-auth-token": jwt,
+        "x-user-language": Localization.locale,
         "Content-Type": "application/json",
         Accepts: "application/json",
       },
@@ -443,6 +462,7 @@ export const userUpdatePersonalInfo = (
       method: "PUT",
       headers: {
         "x-auth-token": jwt,
+        "x-user-language": Localization.locale,
         "Content-Type": "application/json",
         Accepts: "application/json",
       },
@@ -509,6 +529,7 @@ export const userSendMessage = (message) => {
       method: "POST",
       headers: {
         "x-auth-token": jwt,
+        "x-user-language": Localization.locale,
         "Content-Type": "application/json",
         Accepts: "application/json",
       },

@@ -14,6 +14,7 @@ import i18n from "i18n-js";
 import { useDispatch, useSelector } from "react-redux";
 import { userForgotPassword } from "../../store/actions/user";
 import { clearForgotPasswordFormErrors } from "../../store/actions/formErrors/forgotPasswordFormErrors";
+import { formFields } from "../../constants/formFields";
 
 const UserForgotPasswordScreen = (props) => {
   const dispatch = useDispatch();
@@ -26,6 +27,18 @@ const UserForgotPasswordScreen = (props) => {
   );
 
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState(null);
+
+  useEffect(() => {
+    const phoneNumberError = forgotPasswordFormErrors.find(
+      (formError) => formError.field === formFields.forgotPasswordPhoneNumber
+    );
+    if (phoneNumberError) {
+      setPhoneNumberError(phoneNumberError);
+    } else {
+      setPhoneNumberError(phoneNumberError);
+    }
+  }, [forgotPasswordFormErrors]);
 
   useEffect(() => {
     return () => {
@@ -38,6 +51,7 @@ const UserForgotPasswordScreen = (props) => {
     setPhoneNumber("");
   };
 
+  console.log(forgotPasswordFormErrors);
   return (
     <SafeAreaView style={styles.forgotPasswordSafeArea}>
       <KeyboardAwareScrollView
@@ -60,7 +74,7 @@ const UserForgotPasswordScreen = (props) => {
               </Text>
             </View>
             <View style={styles.formContainer}>
-              {forgotPasswordFormErrors ? (
+              {forgotPasswordFormErrors.length > 0 ? (
                 <Text style={styles.errorText}>{i18n.t("errorText")}</Text>
               ) : null}
               <View style={styles.inputContainer}>
@@ -69,7 +83,7 @@ const UserForgotPasswordScreen = (props) => {
                 </Text>
                 <TextInput
                   style={
-                    forgotPasswordFormErrors
+                    phoneNumberError
                       ? [styles.input, styles.inputError]
                       : styles.input
                   }
@@ -81,6 +95,11 @@ const UserForgotPasswordScreen = (props) => {
                   )} (e.g 17085552020)`}
                   placeholderTextColor="#9E9E9E"
                 />
+                {phoneNumberError ? (
+                  <Text style={styles.inputErrorText}>
+                    {phoneNumberError.message}
+                  </Text>
+                ) : null}
               </View>
               <TouchableOpacity
                 style={
@@ -189,6 +208,11 @@ const styles = StyleSheet.create({
   inputError: {
     borderWidth: 1,
     borderColor: "red",
+  },
+  inputErrorText: {
+    marginTop: 10,
+    fontFamily: "poppins-regular",
+    color: "red",
   },
   sendCodeButton: {
     width: "100%",

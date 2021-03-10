@@ -245,10 +245,10 @@ const ProfileScreen = () => {
               <Text style={styles.changePasswordHeader}>
                 {i18n.t("changePasswordTitle")}
               </Text>
+              {changePasswordFormErrors.length > 0 ? (
+                <Text style={styles.errorText}>{i18n.t("errorText")}</Text>
+              ) : null}
               <View style={styles.inputContainer}>
-                {changePasswordFormErrors.length > 0 ? (
-                  <Text style={styles.errorText}>{i18n.t("errorText")}</Text>
-                ) : null}
                 <Text style={styles.inputLabel}>
                   {i18n.t("currentPasswordLabel")}
                 </Text>
