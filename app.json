@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "chicago-boost-mobile-app",
-    "slug": "chicago-boost-mobile-app",
+    "name": "Chicago Boost",
+    "slug": "chicago-boost",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

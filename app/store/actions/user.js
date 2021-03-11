@@ -430,6 +430,40 @@ export const userUpdatePushToken = (pushToken) => {
   };
 };
 
+export const userRemovePushToken = () => {
+  return async (dispatch, getState) => {
+    let jwt;
+    try {
+      const asyncStorageJwt = await AsyncStorage.getItem("@jwt");
+      if (asyncStorageJwt) {
+        jwt = asyncStorageJwt;
+      }
+    } catch (err) {
+      return console.log(err);
+    }
+
+    const user = getState().user;
+
+    const reqObj = {
+      method: "PUT",
+      headers: {
+        "x-auth-token": jwt,
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+    };
+
+    fetch(`${API_BASE_URL}/users/pushToken/${user._id}`, reqObj)
+      .then((resp) => resp.json())
+      .then((user) => {
+        dispatch({ type: USER_UPDATE, user: user });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
 export const userUpdatePersonalInfo = (
   firstName,
   lastName,
@@ -456,6 +490,7 @@ export const userUpdatePersonalInfo = (
       email: email.toLowerCase(),
       phoneNumber: phoneNumber,
       admin: user.admin,
+      pushToken: user.pushToken,
     };
 
     const reqObj = {

@@ -8,16 +8,12 @@ import {
   Linking,
 } from "react-native";
 import moment from "moment";
-import "moment/locale/es";
-import "moment/locale/es-us";
 import Swiper from "react-native-swiper";
-import * as Localization from "expo-localization";
 import i18n from "i18n-js";
 
 const Deal = ({ deal }) => {
-  moment.locale(Localization.locale);
-  const startDate = moment(deal.startDate).format("MMMM D, YYYY");
-  const endDate = moment(deal.endDate).format("MMMM DD, YYYY");
+  const startDate = moment(deal.startDate).format("MM-DD-YYYY");
+  const endDate = moment(deal.endDate).format("MM-DD-YYYY");
 
   const renderPhotos = () => {
     return deal.photos.map((photo) => (

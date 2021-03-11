@@ -12,7 +12,10 @@ import i18n from "i18n-js";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { useDispatch, useSelector } from "react-redux";
-import { userUpdatePushToken } from "../../../store/actions/user";
+import {
+  userRemovePushToken,
+  userUpdatePushToken,
+} from "../../../store/actions/user";
 import { getDeals, getRefreshedDeals } from "../../../store/actions/deals";
 
 import Deal from "./UI/Deal";
@@ -33,12 +36,15 @@ const DealsScreen = () => {
         const { status } = await Permissions.askAsync(
           Permissions.NOTIFICATIONS
         );
-        if (status !== "granted")
-          return Alert.alert(
+        if (status !== "granted") {
+          Alert.alert(
             i18n.t("notificationsAlertTitle"),
             i18n.t("notificationsAlertMessage"),
             [{ text: "OK" }]
           );
+          dispatch(userRemovePushToken());
+          return;
+        }
 
         let token = await Notifications.getExpoPushTokenAsync();
 
